@@ -1,1 +1,7 @@
+.metadata/*
+**/.vscode
+
+STM32U083RCT6*/Release
+STM32U083RCT6*/Debug
+STM32U083RCT6*/*.launch
 
