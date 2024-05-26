@@ -38,8 +38,8 @@ extern volatile uint8_t rx1_len;
 extern volatile uint8_t rec1_end_flag;
 extern uint8_t rx1_buffer[BUFFER_SIZE];
 
+int DMA_Usart1_Send(uint8_t *buf,uint8_t len);
 void Usart1_Handle(void);
-void DMA_Usart1_Send(uint8_t *buf,uint8_t len);
 void Usart1_IDLE(void);
 /* USER CODE END Includes */
 

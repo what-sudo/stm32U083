@@ -224,15 +224,14 @@ void Usart1_IDLE(void)
   }
 }
 
-void DMA_Usart1_Send(uint8_t *buf, uint8_t len)
+int DMA_Usart1_Send(uint8_t *buf, uint8_t len)
 {
   if (len == 0)
-    return;
+    return 0;
   HAL_StatusTypeDef sta = HAL_UART_Transmit_DMA(&hlpuart1, buf, len);
   if (sta != HAL_OK)
-  {
-    Error_Handler();
-  }
+    return -1;
+  return 0;
 }
 
 void Usart1_Handle()

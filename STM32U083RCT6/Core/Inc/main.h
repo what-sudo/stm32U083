@@ -31,7 +31,6 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-extern volatile uint32_t sys_ms_timer;
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

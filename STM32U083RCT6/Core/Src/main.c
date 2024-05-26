@@ -25,7 +25,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-volatile uint32_t sys_ms_timer = 0;
 uint32_t task1 = 0;
 /* USER CODE END Includes */
 
@@ -60,6 +59,7 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
 uint8_t task_scheduling(uint32_t *task, uint32_t time)
 {
+  uint32_t sys_ms_timer = HAL_GetTick();
   if ((sys_ms_timer > *task) && ((sys_ms_timer - *task) > time))
   {
     *task = sys_ms_timer;
@@ -125,7 +125,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    if (task_scheduling(&task1, 500))
+    if (task_scheduling(&task1, 1000))
     {
       HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
     }
