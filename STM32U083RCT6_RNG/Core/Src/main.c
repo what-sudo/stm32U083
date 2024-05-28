@@ -87,7 +87,6 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-  uint32_t random = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -125,15 +124,34 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  uint32_t random = 0;
+  uint8_t num[7] = {0};
+  int i = 0;
   while (1)
   {
-    if (task_scheduling(&task1, 100))
+    if (task_scheduling(&task1, 500))
     {
+      for (i = 0; i < 7; i++) {
+        if (HAL_RNG_GenerateRandomNumber(&hrng, &random) != HAL_OK) {
+          printf("error: generate ranom fail\n");
+          i--;
+        } else {
+          num[i] = random % 33 + 1;
+        }
+      }
+
       if (HAL_RNG_GenerateRandomNumber(&hrng, &random) != HAL_OK) {
         printf("error: generate ranom fail\n");
       } else {
-        printf("random: %lu \n", random);
+        num[6] = random % 16 + 1;
       }
+
+      printf("生成的号码为: ");
+      for (i = 0; i < 7; i++) {
+        printf("%d ", (int)num[i]);
+      }
+      printf(" \n");
+
       HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
     }
 
