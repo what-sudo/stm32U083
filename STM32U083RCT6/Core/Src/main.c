@@ -20,7 +20,6 @@
 #include "main.h"
 #include "dma.h"
 #include "usart.h"
-#include "tim.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -109,7 +108,6 @@ int main(void)
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_LPUART1_UART_Init();
-  MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
   EXTI->IMR1 |= 1<<0;
@@ -125,7 +123,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    if (task_scheduling(&task1, 1000))
+    if (task_scheduling(&task1, 500))
     {
       HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
     }

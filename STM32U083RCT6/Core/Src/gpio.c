@@ -35,8 +35,6 @@
 /** Configure pins
      PC14-OSC32_IN   ------> RCC_OSC32_IN
      PC15-OSC32_OUT   ------> RCC_OSC32_OUT
-     PF0-OSC_IN   ------> RCC_OSC_IN
-     PF1-OSC_OUT   ------> RCC_OSC_OUT
      PA13 (SWDIO)   ------> DEBUG_JTMS-SWDIO
      PA14 (SWCLK)   ------> DEBUG_JTCK-SWCLK
 */
@@ -47,7 +45,6 @@ void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
