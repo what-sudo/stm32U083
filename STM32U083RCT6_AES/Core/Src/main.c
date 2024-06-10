@@ -63,12 +63,16 @@ typedef enum {
 /* USER CODE BEGIN PV */
 static uint32_t task1 = 0;
 
+// 加解密的key
 uint8_t AES_key1[33] = "12345678901234561234567890123456";
+// cbc模式下需要使用的初始向量iv
 uint8_t aesiv1[17] = "1234567890123456";
 
+// 多轮加密时，需要传入的密钥内存
 uint8_t AES_key[32] = {0};
 uint8_t aesiv[16] = {0};
 
+// 待加密的原始数据，约3.5K字符。
 char Text1[] = " \
 -----BEGIN PRIVATE KEY-----                                      \
 MIIJQQIBADANBgkqhkiG9w0BAQEFAASCCSswggknAgEAAoICAQCsXDZ8s9ToFi+t \
@@ -124,14 +128,14 @@ tPyMMOI4+t93oni0Go8OkF2FIYsquWMEh4IILMm27mVZk7A+FLW+hK/FXec3dogO \
 -----END PRIVATE KEY-----                                        \
 ";
 
-char Text2[] = "1234qwer5678asdf1234qwer5678asdf";
-
 char *Text = Text1;
 
+// 加解密过程中，需要的内存
 uint8_t plain[4096 + 16] = {0};
 uint8_t cipher[4096 + 16] = {0};
 uint8_t tmp_buffer[4096 + 16] = {0};
 
+// 计算加解密时间所需要的变量
 int i = 0;
 uint32_t start, end, interval;
 
@@ -176,6 +180,16 @@ uint8_t task_scheduling(uint32_t *task, uint32_t time)
   return 0;
 }
 
+
+/**
+ * @brief  pkcs7填充算法
+ * @param  p: 需要填充的数据指针
+ * @param  len: 需要填充的数据长度
+ * @param  block_size: 按照多大的block进行填充，通常为16
+ * @return 填充后的数据长度
+ * @author joseph
+ * @date   2024.5.27
+ */
 static size_t pkcs7Padding(unsigned char *p, size_t len, uint8_t block_size)
 {
     uint8_t i = 0;
@@ -189,6 +203,15 @@ static size_t pkcs7Padding(unsigned char *p, size_t len, uint8_t block_size)
     return (len + padding);
 }
 
+/**
+ * @brief  pkcs7解填充算法
+ * @param  p: 需要解填充的数据指针
+ * @param  len: 需要解填充的数据长度
+ * @param  block_size: 按照多大的block进行填充，通常为16
+ * @return 解填充后的数据长度
+ * @author joseph
+ * @date   2024.5.27
+ */
 static size_t pkcs7UnPadding(unsigned char *p, size_t len, uint8_t block_size)
 {
     uint8_t unPadding  = 0;
@@ -207,6 +230,16 @@ static size_t pkcs7UnPadding(unsigned char *p, size_t len, uint8_t block_size)
     return (len - unPadding);
 }
 
+/**
+ * @brief  aes模块密钥与模式配置代码
+ * @param  key: aes密钥指针
+ * @param  key_len: aes密钥长度
+ * @param  mode: aes算法模式，ECB/CBC
+ * @param  iv: 初始向量指针，如果为ECB时，入参NULL即可
+ * @return 0：SUCCESS, <0: fail
+ * @author joseph
+ * @date   2024.5.27
+ */
 int aes_set_config(uint8_t *key, int key_len, AES_Algorithm_t mode, uint8_t *iv)
 {
   int ret = -1;
@@ -247,8 +280,18 @@ int aes_set_config(uint8_t *key, int key_len, AES_Algorithm_t mode, uint8_t *iv)
   return ret;
 }
 
-#define CRYPT_NUM_TIMES 10   // 设置加解密测试轮数
+#define CRYPT_NUM_TIMES 1000   // 设置加解密测试轮数
 
+/**
+ * @brief  aes加解密接口
+ * @param  mode: aes加解密模式，EN/DE
+ * @param  in_buffer: 等待加解密的数据指针
+ * @param  inlen: 输入的数据长度
+ * @param  out_buffer: 保存加解密后数据的内存指针
+ * @return 0：输出的数据长度, <0: fail
+ * @author joseph
+ * @date   2024.5.27
+ */
 int aes_crypt(AES_Crypt_Mode_t mode, unsigned char *in_buffer, int inlen, unsigned char *out_buffer)
 {
   int ret = -1;
